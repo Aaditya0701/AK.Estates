@@ -40,10 +40,10 @@ export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
         const validUser = await User.findOne({ email });
-        if (!validUser) return next(errorHandler(404, 'User Not Found'));
+        if (!validUser) return next(errorHandler(404, /* User Not Found */'Invalid Email or Passowrd ⚠️'));
 
         const validPswd = bcryptjs.compareSync(password, validUser.password);
-        if (!validPswd) return next(errorHandler(404, 'Invalid Password'));
+        if (!validPswd) return next(errorHandler(404, /* 'Invalid Password' */'Invalid Email or Passowrd ⚠️'));
 
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
         const { password: pswd, ...rest } = validUser._doc;
