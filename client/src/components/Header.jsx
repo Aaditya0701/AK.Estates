@@ -34,7 +34,7 @@ export default function Header() {
                                 alt="Profile"
                             />
                         ) : (
-                            <li className='hidden sm:inline text-slate-700 hover:underline'>Signin</li>
+                            <li className='sm:inline text-slate-700 hover:underline'>Signin</li>
                         )
                         }
                     </Link>
