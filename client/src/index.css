@@ -5,3 +5,8 @@
 body {
     background-color: rgb(241, 245, 241);
 }
+
+.editImg {
+    margin-left: 95px;
+    margin-top: -20px;
+}
