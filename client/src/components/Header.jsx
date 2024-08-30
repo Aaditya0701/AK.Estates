@@ -3,9 +3,30 @@ import { FaSearch } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { PiSignOutBold } from "react-icons/pi";
+import { signOutUserFailure, signOutUserStart, signOutUserSuccess } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
+
 
 export default function Header() {
-    const { currentUser } = useSelector(state => state.user)
+    const { currentUser } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
+    const handleSignout = async (e) => {
+        try {
+          dispatch(signOutUserStart())
+          const res = await fetch('/api/auth/signout');
+          const data = await res.json();
+          if (data.success === false) {
+            dispatch(signOutUserFailure(data.message))
+            return;
+          }
+          dispatch(signOutUserSuccess(data));
+        } catch (error) {
+          dispatch(signOutUserFailure(error.message))
+        }
+      };
+
     return (
         <header className='bg-slate-200 shadow-md'>
             <div className='flex justify-between items-center max-w-7xl mx-auto p-3'>
@@ -35,6 +56,14 @@ export default function Header() {
                             />
                         ) : (
                             <li className='sm:inline text-slate-700 hover:underline'>Signin</li>
+                        )
+                        }
+                    </Link>
+                    <Link to=''>
+                        {currentUser ? (
+                            <li onClick={handleSignout}><PiSignOutBold /></li>
+                        ) : (
+                            ''
                         )
                         }
                     </Link>
