@@ -4,8 +4,8 @@ import { RiImageEditLine } from "react-icons/ri";
 import { useRef, useEffect } from 'react';
 import { app } from '../firebase.js';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice.js';
 import { useDispatch } from 'react-redux';
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice.js';
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -68,7 +68,7 @@ export default function Profile() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  /* const handleSubmit = async (e) => {
     e.preventDefault(); //avoids loading of complete page
     try {
       dispatch(updateUserStart());
@@ -90,6 +90,73 @@ export default function Profile() {
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  } */
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // avoids loading of complete page
+    try {
+      dispatch(updateUserStart());
+
+      // Check if the username or email is already taken
+      const uniqueCheckRes = await fetch(`/api/user/check-unique`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userName: formData.userName,
+          email: formData.email,
+          userId: currentUser._id,
+        }),
+      });
+
+      const uniqueCheckData = await uniqueCheckRes.json();
+
+      if (!uniqueCheckData.isUnique) {
+        setUpdateSuccess(false);
+        dispatch(updateUserFailure('Username or Email already taken'));
+        return;
+      }
+
+      // Proceed with updating the user if the fields are unique
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        setUpdateSuccess(false);
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      setUpdateSuccess(false);
+      dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handleDelete = async (e) => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(deleteUserFailure(data.message));
+          return;
+          }
+          dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   }
 
@@ -160,12 +227,12 @@ export default function Profile() {
         <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Update'}</button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-600 cursor-pointer'>Delete Account</span>
+        <span onClick={handleDelete} className='text-red-600 cursor-pointer'>Delete Account</span>
         <span className='text-red-600 cursor-pointer'>Sign Out</span>
       </div>
       {error && <p className='text-red-700 mt-5'>{error}</p>}
       <p className='text-green-700 mt-5'>
-        {updateSuccess ? 'User is updated successfully !' : error}
+        {updateSuccess ? 'User is updated successfully !' : ""}
       </p>
     </div>
   );
