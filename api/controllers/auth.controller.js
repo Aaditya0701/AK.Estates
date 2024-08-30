@@ -18,7 +18,7 @@ export const signup = async (req, res, next) => {
 
 };
 
-//signin page sunctionality
+//signin page functionality
 export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -60,14 +60,14 @@ export const signin = async (req, res, next) => {
 //Google OAuth functionality
 export const google = async (req, res, next) => {
     try {
-        const user = await User.findOne({email: req.body.email})
-        if (user){
+        const user = await User.findOne({ email: req.body.email })
+        if (user) {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             const { password: pswd, ...rest } = user._doc;
             res
-            .cookie('access_token', token, { httpOnly: true })
-            .status(200)
-            .json({ success: true, ...rest });
+                .cookie('access_token', token, { httpOnly: true })
+                .status(200)
+                .json({ success: true, ...rest });
         } else {
             //if email id is not in database, register it as new user with random password
             //...becausepassword field is required
@@ -83,11 +83,22 @@ export const google = async (req, res, next) => {
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
             const { password: pswd, ...rest } = newUser._doc;
             res
-            .cookie('access_token', token, { httpOnly: true })
-            .status(200)
-            .json({ success: true, ...rest });
+                .cookie('access_token', token, { httpOnly: true })
+                .status(200)
+                .json({ success: true, ...rest });
         }
     } catch (error) {
         next(error);
     }
 };
+
+//signout page functionality
+
+export const signOut = async (req, res, next) => {
+    try {
+        res.clearCookie('access_token');
+        res.status(200).json('Sign Out Successfully.')
+    } catch (error) {
+        next(error)
+    }
+}
