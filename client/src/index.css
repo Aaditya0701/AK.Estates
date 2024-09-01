@@ -10,3 +10,8 @@ body {
     margin-left: 95px;
     margin-top: -20px;
 }
+
+.backIconStyle {
+    margin-left: 170%;
+    font-size: 30px;
+}
