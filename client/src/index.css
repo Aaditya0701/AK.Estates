@@ -11,7 +11,13 @@ body {
     margin-top: -20px;
 }
 
+.backIconContainer {
+    position: absolute;
+    top: 80px; /* Adjust this value based on your header bar's height */
+    right: 20px; /* Adjust the distance from the right edge */
+}
+
 .backIconStyle {
-    margin-left: 170%;
     font-size: 30px;
+    cursor: pointer; /* Optional: to indicate the icon is clickable */
 }
