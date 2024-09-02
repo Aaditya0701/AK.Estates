@@ -9,6 +9,7 @@ import Header from './components/Header.jsx'
 import PrivateRoute from './components/PrivateRoute'
 import CreateListing from './pages/CreateListing.jsx'
 import UserListings from './pages/UserListings.jsx'
+import UpdateListing from './pages/UpdateListing.jsx'
 
 export default function App() {
   return (
@@ -18,12 +19,13 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/update-listing/:listingId" element={<UpdateListing />} />
         </Route>
         <Route path='/user/listings/:id' element={<UserListings />} />
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/create-listing" element={<CreateListing />} />
       </Routes>
     </BrowserRouter>
   )
