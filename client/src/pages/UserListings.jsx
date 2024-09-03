@@ -53,16 +53,11 @@ const UserListings = () => {
 
     return (
         <div className='p-3 max-w-lg mx-auto'>
-            <Link to={'/profile'} className='backIconContainer'>
-                <div className='backIconStyle'>
-                    <p><IoReturnDownBack /></p>
-                </div>
-            </Link>
+            <h1 className='text-center mt-5 text-3xl font-semibold'>Your Listings</h1>
             <p className='text-red-700 text-sm'>{showListingsError ? 'Error displaying listings ⚠️' : ''}</p>
             {
                 userListings && userListings.length > 0 &&
                 <div className='flex flex-col gap-3'>
-                    <h1 className='text-center mt-5 text-3xl font-semibold'>Your Listings</h1>
                     {
                         userListings.map((listing) => (
                             <div key={listing._id} className='border rounded-lg p-3 mt-2 flex justify-between items-center gap-3'>

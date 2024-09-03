@@ -1,34 +1,36 @@
 import React from 'react'
 import { FaSearch } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PiSignOutBold } from "react-icons/pi";
 import { signOutUserFailure, signOutUserStart, signOutUserSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
+import { IoReturnDownBack } from 'react-icons/io5';
 
 
 export default function Header() {
     const { currentUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const handleSignout = async (e) => {
         try {
-          dispatch(signOutUserStart())
-          const res = await fetch('/api/auth/signout');
-          const data = await res.json();
-          if (data.success === false) {
-            dispatch(signOutUserFailure(data.message))
-            return;
-          }
-          dispatch(signOutUserSuccess(data));
+            dispatch(signOutUserStart())
+            const res = await fetch('/api/auth/signout');
+            const data = await res.json();
+            if (data.success === false) {
+                dispatch(signOutUserFailure(data.message))
+                return;
+            }
+            dispatch(signOutUserSuccess(data));
         } catch (error) {
-          dispatch(signOutUserFailure(error.message))
+            dispatch(signOutUserFailure(error.message))
         }
-      };
+    };
 
     return (
-        <header className='bg-slate-200 shadow-md'>
+        <header className='bg-slate-200 shadow-md headerStyle'>
             <div className='flex justify-between items-center max-w-7xl mx-auto p-3'>
                 <Link to='/'>
                     <h1 className='font-bold text-sm sm:text-3xl flex flex-wrap'>
@@ -41,6 +43,16 @@ export default function Header() {
                     <FaSearch className='text-slate-600' />
                 </form>
                 <ul className='flex items-center gap-5'>
+                    {location.pathname.includes('/listing') && (
+                        <Link to={`/user/listings/${currentUser?._id}`} className='backIconContainer'>
+                            <IoReturnDownBack className='backIconStyle' />
+                        </Link>
+                    )}
+                    {location.pathname.includes('/user/listings') && (
+                        <Link to={'/profile'} className='backIconContainer'>
+                            <IoReturnDownBack className='backIconStyle' />
+                        </Link>
+                    )}
                     <Link to='/'>
                         <li className='hidden sm:inline text-slate-700 hover:underline'>Home</li>
                     </Link>

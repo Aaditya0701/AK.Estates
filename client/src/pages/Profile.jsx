@@ -163,10 +163,10 @@ export default function Profile() {
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-2'>
+      <h1 className='text-3xl font-semibold text-center my-1'>
         Profile
       </h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
         <img
           className='rounded-full h-28 w-28 object-cover cursor-default self-center mt-2'
           src={formData.avatar || currentUser.avatar}
