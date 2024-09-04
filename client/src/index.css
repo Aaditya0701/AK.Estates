@@ -13,8 +13,8 @@ body {
 }
 
 .backIconContainer {
-    position: absolute;
-    top: 80px; /* Adjust this value based on your header bar's height */
+    position: fixed;
+    top: 65px; /* Adjust this value based on your header bar's height */
     right: 20px; /* Adjust the distance from the right edge */
 }
 
@@ -115,3 +115,6 @@ body {
   }
 }
 
+.descStyle {
+  text-align: justify;
+}
