@@ -7,6 +7,7 @@ import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { FaBath, FaBed, FaChair, FaMapMarkedAlt, FaMapMarkerAlt, FaParking, FaShare } from 'react-icons/fa';
+import Contact from '../components/Contact.jsx';
 
 // https://sabe.io/blog/javascript-format-numbers-commas#:~:text=The%20best%20way%20to%20format,format%20the%20number%20with%20commas.
 
@@ -20,6 +21,7 @@ export default function Listing() {
     const { currentUser } = useSelector((state) => state.user);
     SwiperCore.use([Navigation]);
     const [copied, setCopied] = useState(false);
+    const [contact, setContact] = useState(false);
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -76,7 +78,7 @@ export default function Listing() {
                 </p>
             }
             {listing && !loading && !error &&
-                <div className="max-w-screen-lg mx-auto">
+                <div className="max-w-screen-lg mx-auto p-2">
                     <Swiper navigation>
                         {listing.imageUrl.map((url, index) => (
                             <SwiperSlide key={index}>
@@ -144,7 +146,7 @@ export default function Listing() {
                         </span>
                         {listing.description}
                     </p>
-                    <ul className='p-3 flex flex-wrap gap-4 text-green-900 font-semibold text-sm'>
+                    <ul className=' flex flex-wrap gap-4 text-green-900 font-semibold text-sm mt-3 mb-2'>
                         <li className='flex items-center gap-1 whitespace-nowrap'>
                             <FaBed className='text-lg' />
                             {
@@ -172,6 +174,18 @@ export default function Listing() {
                             }
                         </li>
                     </ul>
+                    {currentUser && listing.userRef !== currentUser._id && !contact && (
+                        <div className='flex justify-center mt-6 mb-7'>
+                            <button
+                                onClick={() => setContact(true)}
+                                className='bg-slate-700 text-white p-3 uppercase rounded-lg w-full max-w-[1100px] hover:opacity-95'
+                            >
+                                Contact Landlord
+                            </button>
+                        </div>
+                    )
+                    }
+                    {contact && <Contact listing={listing} />}
                 </div>
             }
         </main>
