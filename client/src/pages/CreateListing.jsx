@@ -31,7 +31,7 @@ export default function CreateListing() {
 
     // upload and store images in firebase functionality
     const handleImageUpload = (e) => {
-        if (files.length > 0 && files.length + formData.imageUrl.length < 7) {
+        if (files.length > 0 && files.length + formData.imageUrl.length < 9) {
             setUploading(true);
             setImageUploadError(false);
             const promise = [];
@@ -51,7 +51,7 @@ export default function CreateListing() {
                 setUploading(false)
             })
         } else {
-            setImageUploadError('Min. 1 and Max. 6 Images can upload.')
+            setImageUploadError('Min. 1 and Max. 8 Images can upload.')
             setUploading(false)
         }
     }
@@ -311,7 +311,7 @@ export default function CreateListing() {
                 </div>  {/* end of 1st flex-1 div */}
                 <div className='flex flex-col flex-1 gap-4'>
                     <p className='font-semibold'>Images:
-                        <span className='font-normal text-gray-700 ml-2'>The first image will be cover image (max. 6 images can upload)</span>
+                        <span className='font-normal text-gray-700 ml-2'>The first image will be cover image (max. 8 images can upload)</span>
                     </p>
                     <div className='flex gap-4'>
                         <input

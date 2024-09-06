@@ -78,7 +78,7 @@ export default function Listing() {
                 </p>
             }
             {listing && !loading && !error &&
-                <div className="max-w-screen-lg mx-auto p-2">
+                <div className="max-w-screen-lg mx-auto">
                     <Swiper navigation>
                         {listing.imageUrl.map((url, index) => (
                             <SwiperSlide key={index}>
@@ -93,6 +93,10 @@ export default function Listing() {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+                </div>
+            }
+            {listing && !loading && !error &&
+                <div className='ml-32 mr-32'>
                     <div className='fixed top-[15%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
                         <FaShare
                             className='text-slate-500'
@@ -110,14 +114,14 @@ export default function Listing() {
                             Link copied!
                         </p>
                     )}
-                    <div className='flex flex-col max-w-4xl mx-auto p-3 my-4 gap-3'>
+                    <div className='flex flex-col max-w-7xl mx-auto p-2 my-4 gap-3'>
                         <p className='flex flex-col sm:flex-row text-2xl font-semibold gap-2'>
                             {listing.name} - ₹{' '}
                             {listing.regularPrice.toLocaleString('en-US')}
+                            {listing.type === 'rent' ? ' / month' : ''}
                             <p className='underline'>
                                 {listing.offer ? ' (Limited Period Offer)' : ''}
                             </p>
-                            {listing.type === 'rent' && ' / month'}
                         </p>
                         <p className='flex items-center mt-4 gap-2 text-slate-600  text-sm'>
                             <FaMapMarkerAlt className='text-green-700' />
@@ -130,11 +134,12 @@ export default function Listing() {
                             {
                                 listing.offer ? (
                                     <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                                        Final Price: ${+listing.regularPrice - +listing.discountPrice}
+                                        Final Price: ₹ {(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-US')}
                                     </p>
+
                                 ) : (
                                     <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                                        Final Price: ${+listing.regularPrice}
+                                        Final Price: ₹ {listing.regularPrice.toLocaleString('en-US')}
                                     </p>
                                 )
                             }
