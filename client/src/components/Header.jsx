@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaSearch } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PiSignOutBold } from "react-icons/pi";
 import { signOutUserFailure, signOutUserStart, signOutUserSuccess } from '../redux/user/userSlice';
@@ -13,6 +13,8 @@ export default function Header() {
     const { currentUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const handleSignout = async (e) => {
         try {
@@ -31,6 +33,23 @@ export default function Header() {
 
     const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        //get all the data, convert it to string and set it in url. And navigate the page according to url
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('searchTerm', searchTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    }
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+    },[location.search])
+
 
     return (
         <header className='bg-slate-200 shadow-md headerStyle'>
@@ -42,9 +61,17 @@ export default function Header() {
                     </h1>
                 </Link>
                 {!isAuthPage && (
-                    <form className='bg-slate-100 p-2 rounded-3xl flex items-center'>
-                        <input type='text' placeholder='Search...' className='bg-transparent focus:outline-none w-24 sm:w-64' />
-                        <FaSearch className='text-slate-600' />
+                    <form onClick={handleSubmit} className='bg-slate-100 p-2 rounded-3xl flex items-center'>
+                        <input
+                            type='text'
+                            placeholder='Search...'
+                            className='bg-transparent focus:outline-none w-24 sm:w-64'
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button>
+                            <FaSearch className='text-slate-600' />
+                        </button>
                     </form>
                 )}
                 <ul className='flex items-center gap-5'>
