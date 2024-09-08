@@ -75,7 +75,7 @@ export default function Header() {
                     </form>
                 )}
                 <ul className='flex items-center gap-5'>
-                    {location.pathname.includes('/listing') && (
+                    {/* {location.pathname.includes('/listing') && (
                         <Link to={`/user/listings/${currentUser?._id}`} className='backIconContainer'>
                             <IoReturnDownBack className='backIconStyle' />
                         </Link>
@@ -84,7 +84,7 @@ export default function Header() {
                         <Link to={'/profile'} className='backIconContainer'>
                             <IoReturnDownBack className='backIconStyle' />
                         </Link>
-                    )}
+                    )} */}
                     <Link to='/'>
                         <li className='hidden sm:inline text-slate-700 hover:underline'>Home</li>
                     </Link>

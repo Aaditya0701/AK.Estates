@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import ListingItem from '../components/ListingItem';
 
 export default function Search() {
 
-    const [sidebarData, setSidebarData] = useState({
+    const defaultSidebarData = {
         searchTerm: '',
         type: 'all',
         offer: false,
@@ -12,12 +13,14 @@ export default function Search() {
         semiFurnished: false,
         sort: 'created_at',
         order: 'desc',
-    })
+    };
+
+    const [sidebarData, setSidebarData] = useState(defaultSidebarData);
     console.log(sidebarData);
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
-    const [listing, setListing] = useState([]);
-    console.log(listing);
+    const [listings, setListings] = useState([]);
+    console.log(listings);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
@@ -30,7 +33,7 @@ export default function Search() {
         const sortFromUrl = urlParams.get('sort');
         const orderFromUrl = urlParams.get('order');
 
-        if(
+        if (
             searchTermFromUrl ||
             typeFromUrl ||
             offerFromUrl ||
@@ -57,7 +60,7 @@ export default function Search() {
             const searchQuery = urlParams.toString();
             const res = await fetch(`api/listing/get?${searchQuery}`)
             const data = await res.json()
-            setListing(data)
+            setListings(data)
             setLoading(false);
         }
         fetchListings();
@@ -65,6 +68,48 @@ export default function Search() {
     }, [location.search])
 
     const handleChange = (e) => {
+        if (e.target.id === 'all') {
+            // If 'all' is selected, reset other filters to their default state
+            setSidebarData({
+                ...sidebarData,
+                type: e.target.id,
+                offer: false,
+                parking: false,
+                furnished: false,
+                semiFurnished: false
+            });
+        } else if (e.target.id === 'sell' || e.target.id === 'rent') {
+            setSidebarData({
+                ...sidebarData,
+                type: e.target.id,
+            });
+        }
+
+        if (e.target.id === 'searchTerm') {
+            setSidebarData({
+                ...sidebarData,
+                searchTerm: e.target.value,
+            });
+        }
+
+        if (e.target.id === 'parking' || e.target.id === 'furnished' || e.target.id === 'semiFurnished' || e.target.id === 'offer') {
+            setSidebarData({
+                ...sidebarData,
+                [e.target.id]: e.target.checked ? true : false,
+            });
+        }
+
+        if (e.target.id === 'sort_order') {
+            const [sort, order] = e.target.value.split('_');
+            setSidebarData({
+                ...sidebarData,
+                sort: sort || 'created_at',
+                order: order || 'desc',
+            });
+        }
+    };
+
+    /* const handleChange = (e) => {
         if (e.target.id === 'all' || e.target.id === 'sell' || e.target.id === 'rent') {
             setSidebarData({
                 ...sidebarData,
@@ -85,7 +130,6 @@ export default function Search() {
             })
 
         }
-
         if (e.target.id === 'sort_order') {
             const sort = e.target.value.split('_')[0] || 'created_at';
             const order = e.target.value.split('_')[1] || 'desc';
@@ -95,7 +139,7 @@ export default function Search() {
                 order
             })
         }
-    }
+    } */
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -116,9 +160,14 @@ export default function Search() {
 
     }
 
+    const handleClearAll = () => {
+        setSidebarData(defaultSidebarData);  // Reset sidebar data to default values
+        navigate('/search');  // Clear the URL search parameters
+    };
+
     return (
         <div className='flex flex-col md:flex-row'>
-            <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
+            <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen w-auto md:w-72">
                 <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
                     <div className="flex items-center gap-2">
                         <lable className='whitespace-nowrap font-semibold'>
@@ -201,10 +250,26 @@ export default function Search() {
                         </select>
                     </div>
                     <button className='bg-slate-700 rounded-lg p-3 text-white uppercase hover:opacity-95'>Search</button>
+                    <div className="">
+                        <lable onClick={handleClearAll} className='font-semibold hover:underline cursor-pointer'>Clear All</lable>
+                    </div>
                 </form>
             </div>
-            <div className="text-3xl font-semibold border-b p-3 text-slate-700 mt-4">
-                <h1>Listing Results:</h1>
+            <div className="flex-1">
+                <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-4'>Listing Results:</h1>
+                <div className="p-7 flex flex-wrap gap-4">
+                    {!loading && listings.length === 0 && (
+                        <p className='text-xl text-slate-700'>No Listing Found !</p>
+                    )}
+
+                    {loading && (
+                        <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+                    )}
+
+                    {!loading && listings && listings.map((listing) => (
+                        <ListingItem key={listing._id} listing={listing} />
+                    ))}
+                </div>
             </div>
         </div>
     )
