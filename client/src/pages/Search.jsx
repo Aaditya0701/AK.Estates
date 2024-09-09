@@ -282,9 +282,22 @@ export default function Search() {
                         <p className='text-xl text-slate-700'>No Listing Found !</p>
                     )}
 
-                    {loading && (
-                        <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
-                    )}
+                    {
+                        loading &&
+                        <div className="loader items-center justify-center w-full mt-[-190px]">
+                            <div class="lds-grid">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    }
 
                     {!loading && listings && listings.map((listing) => (
                         <ListingItem key={listing._id} listing={listing} />
