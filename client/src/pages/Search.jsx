@@ -290,10 +290,12 @@ export default function Search() {
                         <ListingItem key={listing._id} listing={listing} />
                     ))}
 
+                </div>
+                <div className="items-center w-full text-center">
                     {showMore && (
                         <button
                             onClick={onShowMoreClick}
-                            className='text-green-700 hover:underline p-6 text-center w-full'
+                            className='text-green-700 hover:underline p-6'
                         >
                             Show More...
                         </button>
