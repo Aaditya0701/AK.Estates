@@ -163,7 +163,7 @@ export default function Listing() {
                             <FaBath className='text-lg' />
                             {
                                 listing.bathroomCount > 1 ? `${listing.bathroomCount} Bedrooms`
-                                    : `${listing.bathroomCount} Bedroom`
+                                    : `${listing.bathroomCount} Bathroom`
                             }
                         </li>
                         <li className='flex items-center gap-1 whitespace-nowrap'>
